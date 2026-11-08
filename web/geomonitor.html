@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VanRakshak Web GeoMonitor — Shared Forest Map Platform</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { width: 100%; height: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0F382C; }
+
+        .navbar {
+            height: 54px; background: #0F382C; color: #fff; display: flex; align-items: center;
+            padding: 0 20px; justify-content: space-between; border-bottom: 1px solid #1B4D3E;
+        }
+        .navbar .brand { font-size: 18px; font-weight: bold; letter-spacing: 1px; display: flex; align-items: center; }
+        .navbar .brand span { color: #81C784; margin-left: 8px; font-size: 12px; font-weight: normal; }
+
+        .controls { display: flex; gap: 8px; }
+        .btn-filter {
+            background: #1B4D3E; color: #fff; border: 1px solid #2E7D32; padding: 6px 14px;
+            border-radius: 6px; font-size: 12px; cursor: pointer; transition: 0.2s;
+        }
+        .btn-filter:hover, .btn-filter.active { background: #2E7D32; }
+
+        .tile-error-banner {
+            position: absolute; top: 70px; left: 20px; z-index: 1000;
+            background: rgba(211, 47, 47, 0.92); color: #fff;
+            padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold;
+            display: none; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        #map {
+            width: 100%;
+            height: calc(100% - 54px);
+            z-index: 1;
+            background-color: #E8F5E9;
+            background-image: linear-gradient(rgba(46, 125, 50, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(46, 125, 50, 0.08) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .legend {
+            position: absolute; bottom: 24px; right: 16px; z-index: 1000;
+            background: rgba(255,255,255,0.95); padding: 12px 16px; border-radius: 10px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.25); font-size: 12px; color: #1C211E;
+        }
+        .legend-title { font-weight: bold; margin-bottom: 6px; color: #1B4D3E; }
+        .legend-item { display: flex; align-items: center; margin-bottom: 4px; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; display: inline-block; }
+
+        .leaflet-popup-content-wrapper { border-radius: 10px; padding: 6px; }
+        .popup-title { font-weight: bold; font-size: 14px; color: #1B4D3E; margin-bottom: 4px; }
+        .popup-detail { font-size: 12px; color: #444; line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="brand">
+            🌲 VANRAKSHAK GEOMONITOR
+            <span>Web Shared Map Platform (Leaflet Engine)</span>
+        </div>
+        <div class="controls">
+            <button class="btn-filter active" onclick="filterMarkers('ALL', this)">All Layers</button>
+            <button class="btn-filter" onclick="filterMarkers('NODES', this)">Nodes Only</button>
+            <button class="btn-filter" onclick="filterMarkers('ALERTS', this)">Alerts Only</button>
+            <button class="btn-filter" onclick="filterMarkers('ZONES', this)">Zones Only</button>
+            <button class="btn-filter" onclick="resetCenter()">Recenter Map</button>
+        </div>
+    </div>
+
+    <div id="tileErrorBanner" class="tile-error-banner">
+        ⚠️ Primary tiles unavailable. Switched to fallback basemap.
+    </div>
+
+    <div class="legend">
+        <div class="legend-title">GeoMonitor Map Legend</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#2E7D32;"></span> Active Hardware Node</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#F57C00;"></span> Low Battery Warning</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#D32F2F;"></span> AI Chainsaw Threat Alert</div>
+        <div class="legend-item"><span class="legend-dot" style="background:rgba(46,125,50,0.3); border:1px solid #2E7D32;"></span> Monitored Forest Zone</div>
+    </div>
+
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const sharedData = {
+            "center": [21.1458, 79.0882],
+            "zoom": 13,
+            "zones": [
+                {
+                    "zone_id": "ZONE-A",
+                    "zone_name": "Zone A — North Canopy Reserve",
+                    "boundary_coordinates": [[21.1550, 79.0820], [21.1620, 79.0820], [21.1620, 79.0950], [21.1550, 79.0950]],
+                    "description": "Dense evergreen canopy reserve with high density acoustic coverage.",
+                    "status": "NORMAL"
+                },
+                {
+                    "zone_id": "ZONE-B",
+                    "zone_name": "Zone B — Teak & Timber Sector",
+                    "boundary_coordinates": [[21.1420, 79.0920], [21.1510, 79.0920], [21.1510, 79.1080], [21.1420, 79.1080]],
+                    "description": "High value teak timber zone. Active illegal logging threat area.",
+                    "status": "ALERT ACTIVE"
+                },
+                {
+                    "zone_id": "ZONE-C",
+                    "zone_name": "Zone C — Sanctuary Buffer",
+                    "boundary_coordinates": [[21.1300, 79.0720], [21.1400, 79.0720], [21.1400, 79.0850], [21.1300, 79.0850]],
+                    "description": "Buffer zone bordering wildlife sanctuary range.",
+                    "status": "NORMAL"
+                }
+            ],
+            "nodes": [
+                { "node_id": "ND-01", "node_name": "Node #01 — North Canopy", "latitude": 21.1580, "longitude": 79.0860, "battery_pct": 92, "connectivity_status": "ONLINE", "zone_id": "ZONE-A" },
+                { "node_id": "ND-03", "node_name": "Node #03 — River Basin Edge", "latitude": 21.1320, "longitude": 79.0980, "battery_pct": 15, "connectivity_status": "LOW BATTERY", "zone_id": "ZONE-C" },
+                { "node_id": "ND-04", "node_name": "Node #04 — Ridge Sector", "latitude": 21.1470, "longitude": 79.1020, "battery_pct": 0, "connectivity_status": "OFFLINE", "zone_id": "ZONE-B" },
+                { "node_id": "ND-07", "node_name": "Node #07 — Teak Reserve Core", "latitude": 21.1450, "longitude": 79.0960, "battery_pct": 88, "connectivity_status": "ONLINE", "zone_id": "ZONE-B" }
+            ],
+            "alerts": [
+                { "alert_id": "ALT-8801", "node_id": "ND-07", "event": "🚨 Possible Chainsaw Sound", "confidence": 94.2, "timestamp": "Today, 10:35 AM", "severity": "CRITICAL", "latitude": 21.1452, "longitude": 79.0964 },
+                { "alert_id": "ALT-8794", "node_id": "ND-03", "event": "⚠️ Suspicious Mechanical Sound", "confidence": 81.5, "timestamp": "Today, 09:12 AM", "severity": "WARNING", "latitude": 21.1325, "longitude": 79.0982 },
+                { "alert_id": "ALT-8780", "node_id": "ND-04", "event": "🚨 Gunshot-like Impulse Sound", "confidence": 88.7, "timestamp": "Yesterday, 11:45 PM", "severity": "CRITICAL", "latitude": 21.1475, "longitude": 79.1025 }
+            ]
+        };
+
+        const map = L.map('map', {
+            center: sharedData.center,
+            zoom: sharedData.zoom,
+            minZoom: 5,
+            maxZoom: 18
+        });
+
+        // Permissive Primary Tile Provider: Esri World Topographic Map (No API Key Required, 0 HTTP 403 Blocks)
+        const primaryTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 18,
+            minZoom: 5,
+            updateWhenIdle: true,
+            updateWhenZooming: false,
+            attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ | VanRakshak GeoMonitor'
+        });
+
+        // Fallback Tile Provider: Esri World Imagery (No API Key Required)
+        const fallbackTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 18,
+            minZoom: 5,
+            updateWhenIdle: true,
+            updateWhenZooming: false,
+            attribution: 'Source: Esri, Maxar, Earthstar Geographics | VanRakshak GeoMonitor'
+        });
+
+        primaryTileLayer.addTo(map);
+
+        // Controlled Tile Error Threshold Handling & Loop Prevention
+        let failedTileCount = 0;
+        let isFallbackAttempted = false;
+        const TILE_ERROR_THRESHOLD = 5;
+
+        primaryTileLayer.on('tileerror', function(e) {
+            failedTileCount++;
+            if (failedTileCount >= TILE_ERROR_THRESHOLD && !isFallbackAttempted) {
+                isFallbackAttempted = true;
+                showBanner('⚠️ Primary basemap tiles unavailable. Switched to satellite fallback layer.');
+                if (map.hasLayer(primaryTileLayer)) {
+                    map.removeLayer(primaryTileLayer);
+                    fallbackTileLayer.addTo(map);
+                }
+            }
+        });
+
+        fallbackTileLayer.on('tileerror', function(e) {
+            showBanner('⚠️ Map basemap offline. GeoMonitor nodes, alerts, and zones remain fully functional over grid.');
+        });
+
+        function showBanner(message) {
+            const banner = document.getElementById('tileErrorBanner');
+            if (banner) {
+                banner.innerText = message;
+                banner.style.display = 'block';
+            }
+        }
+
+        const zoneLayer = L.layerGroup().addTo(map);
+        const nodeLayer = L.layerGroup().addTo(map);
+        const alertLayer = L.layerGroup().addTo(map);
+
+        sharedData.zones.forEach(zone => {
+            const isAlert = zone.status === "ALERT ACTIVE";
+            const polygon = L.polygon(zone.boundary_coordinates, {
+                color: isAlert ? '#D32F2F' : '#2E7D32',
+                fillColor: isAlert ? '#FFEBEE' : '#E8F5E9',
+                fillOpacity: 0.35,
+                weight: 2
+            }).addTo(zoneLayer);
+
+            polygon.bindPopup(`
+                <div class="popup-title">${zone.zone_name}</div>
+                <div class="popup-detail">ID: ${zone.zone_id}</div>
+                <div class="popup-detail">Status: <b>${zone.status}</b></div>
+                <div class="popup-detail">${zone.description}</div>
+            `);
+        });
+
+        sharedData.nodes.forEach(node => {
+            let color = '#2E7D32';
+            if (node.connectivity_status === 'LOW BATTERY') color = '#F57C00';
+            if (node.connectivity_status === 'OFFLINE') color = '#D32F2F';
+
+            const circle = L.circleMarker([node.latitude, node.longitude], {
+                radius: 8,
+                fillColor: color,
+                color: '#ffffff',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.9
+            }).addTo(nodeLayer);
+
+            circle.bindPopup(`
+                <div class="popup-title">📡 ${node.node_name}</div>
+                <div class="popup-detail">Node ID: ${node.node_id}</div>
+                <div class="popup-detail">Zone: ${node.zone_id}</div>
+                <div class="popup-detail">Status: <b>${node.connectivity_status}</b></div>
+                <div class="popup-detail">Battery: ${node.battery_pct}% Solar</div>
+            `);
+        });
+
+        sharedData.alerts.forEach(alert => {
+            const isCritical = alert.severity === 'CRITICAL';
+            const color = isCritical ? '#D32F2F' : '#F57C00';
+
+            const marker = L.circleMarker([alert.latitude, alert.longitude], {
+                radius: 12,
+                fillColor: color,
+                color: '#ffffff',
+                weight: 3,
+                opacity: 1,
+                fillOpacity: 0.85
+            }).addTo(alertLayer);
+
+            marker.bindPopup(`
+                <div class="popup-title">${alert.event}</div>
+                <div class="popup-detail">Alert ID: ${alert.alert_id}</div>
+                <div class="popup-detail">Node: ${alert.node_id}</div>
+                <div class="popup-detail">Confidence: <b>${alert.confidence}%</b></div>
+                <div class="popup-detail">Timestamp: ${alert.timestamp}</div>
+            `);
+        });
+
+        function filterMarkers(filterType, btn) {
+            document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            if (filterType === 'ALL') {
+                map.addLayer(zoneLayer); map.addLayer(nodeLayer); map.addLayer(alertLayer);
+            } else if (filterType === 'NODES') {
+                map.removeLayer(zoneLayer); map.addLayer(nodeLayer); map.removeLayer(alertLayer);
+            } else if (filterType === 'ALERTS') {
+                map.removeLayer(zoneLayer); map.removeLayer(nodeLayer); map.addLayer(alertLayer);
+            } else if (filterType === 'ZONES') {
+                map.addLayer(zoneLayer); map.removeLayer(nodeLayer); map.removeLayer(alertLayer);
+            }
+        }
+
+        function resetCenter() {
+            map.setView(sharedData.center, sharedData.zoom);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Base application theme using Material Design 3 DayNight -->
+    <style name="Theme.VanRakshak" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary Brand Colors -->
+        <item name="colorPrimary">@color/forest_green_primary</item>
+        <item name="colorOnPrimary">@color/text_on_primary</item>
+        <item name="colorPrimaryContainer">@color/forest_green_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/forest_green_on_primary_container</item>
+
+        <!-- Secondary Brand Colors -->
+        <item name="colorSecondary">@color/nature_green_secondary</item>
+        <item name="colorOnSecondary">@color/text_on_primary</item>
+        <item name="colorSecondaryContainer">@color/nature_green_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/nature_green_on_secondary_container</item>
+
+        <!-- Background & Surface Colors -->
+        <item name="android:colorBackground">@color/background_off_white</item>
+        <item name="colorSurface">@color/surface_white</item>
+        <item name="colorSurfaceVariant">@color/surface_variant</item>
+        <item name="colorOnSurface">@color/text_dark_charcoal</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
+
+        <!-- System Bar Customization -->
+        <item name="android:statusBarColor">@color/forest_green_primary_dark</item>
+        <item name="android:navigationBarColor">@color/background_off_white</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <!-- Custom Card Style -->
+    <style name="Widget.VanRakshak.Card" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardBackgroundColor">@color/surface_white</item>
+        <item name="cardCornerRadius">@dimen/card_corner_radius</item>
+        <item name="cardElevation">@dimen/card_elevation</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/divider_color</item>
+    </style>
+</resources>

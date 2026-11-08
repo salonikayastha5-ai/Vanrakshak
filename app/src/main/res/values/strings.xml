@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">VanRakshak</string>
+    <string name="app_name_uppercase">VANRAKSHAK</string>
+    <string name="app_subtitle">AI-Powered Forest Protection System</string>
+
+    <!-- Splash Screen Strings -->
+    <string name="splash_tagline">Protecting Our Forests with AI Intelligence.</string>
+    <string name="splash_footer_ai_monitoring">AI-POWERED FOREST MONITORING</string>
+
+    <!-- Auth Strings -->
+    <string name="auth_welcome_back">Welcome Back</string>
+    <string name="auth_create_account">Create Account</string>
+    <string name="auth_login_subtitle">Sign in to access Forest Monitoring System</string>
+    <string name="auth_register_subtitle">Register new Forest Authority credentials</string>
+    <string name="auth_demo_banner">DEMO MODE — Local Authentication Flow</string>
+    <string name="auth_tab_login">Login</string>
+    <string name="auth_tab_register">Register</string>
+    <string name="auth_hint_name">Full Name</string>
+    <string name="auth_hint_email">Email Address</string>
+    <string name="auth_hint_password">Password</string>
+    <string name="auth_hint_confirm_password">Confirm Password</string>
+    <string name="auth_hint_role">Forest Role</string>
+    <string name="auth_remember_me">Remember me</string>
+    <string name="auth_forgot_password">Forgot Password?</string>
+    <string name="auth_accept_terms">I accept the Terms &amp; Privacy Policy</string>
+    <string name="auth_btn_login">LOGIN TO PORTAL</string>
+    <string name="auth_btn_register">CREATE ACCOUNT</string>
+    <string name="auth_link_to_register">Don\'t have an account? Register here</string>
+    <string name="auth_link_to_login">Already have an account? Login here</string>
+    <string name="auth_err_email">Enter a valid email address</string>
+    <string name="auth_err_password">Password must be at least 6 characters</string>
+    <string name="auth_err_password_match">Passwords do not match</string>
+    <string name="auth_err_name">Please enter your full name</string>
+    <string name="auth_err_terms">Please accept the Terms &amp; Privacy Policy</string>
+
+    <!-- Dashboard Strings -->
+    <string name="dash_title">Forest Monitoring Dashboard</string>
+    <string name="demo_mode_tag">DEMO MODE — Sample Data</string>
+    <string name="stat_total_nodes">12</string>
+    <string name="label_total_nodes">Total Nodes</string>
+    <string name="stat_active_nodes">10 Active</string>
+    <string name="stat_offline_nodes">2 Offline</string>
+    <string name="stat_total_alerts">8</string>
+    <string name="label_total_alerts">Total Alerts</string>
+    <string name="stat_critical_alerts">2 Critical</string>
+    <string name="stat_warning_alerts">6 Warnings</string>
+    <string name="dash_quote_concept">"Intelligence stays at the forest node; only the alert travels."</string>
+    <string name="dash_concept_desc">Edge AI acoustic nodes continuously monitor forest canopy for chainsaw, gunshot, and mechanical signatures. Sample data is currently displayed.</string>
+
+    <!-- Home Screen & Profile Strings -->
+    <string name="home_welcome_title">Welcome to VanRakshak</string>
+    <string name="home_welcome_subtitle">AI-Powered Forest Protection System</string>
+    <string name="home_status_title">System Status: Active</string>
+    <string name="home_description">Real-time acoustic detection, node health monitoring, and instant alert dispatching for forest conservation.</string>
+    <string name="home_logout">LOGOUT</string>
+</resources>

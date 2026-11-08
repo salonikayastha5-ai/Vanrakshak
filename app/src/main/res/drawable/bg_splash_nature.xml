@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Deep Forest Green Base Gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="#0F382C"
+                android:centerColor="#1B4D3E"
+                android:endColor="#0A251B"
+                android:type="linear" />
+        </shape>
+    </item>
+
+    <!-- Subtle Nature Circular Accent Overlay Top-Right -->
+    <item
+        android:width="300dp"
+        android:height="300dp"
+        android:gravity="top|end"
+        android:top="-100dp"
+        android:end="-100dp">
+        <shape android:shape="oval">
+            <solid android:color="#08FFFFFF" />
+        </shape>
+    </item>
+
+    <!-- Subtle Nature Circular Accent Overlay Bottom-Left -->
+    <item
+        android:width="250dp"
+        android:height="250dp"
+        android:gravity="bottom|start"
+        android:bottom="-80dp"
+        android:start="-80dp">
+        <shape android:shape="oval">
+            <solid android:color="#05FFFFFF" />
+        </shape>
+    </item>
+</layer-list>

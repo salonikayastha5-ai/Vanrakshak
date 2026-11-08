@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Outer Protective Shield -->
+    <path
+        android:fillColor="#15FFFFFF"
+        android:strokeColor="#A5D6A7"
+        android:strokeWidth="3"
+        android:pathData="M60,10 L102,26 V58 C102,84 60,106 60,106 C60,106 18,84 18,58 V26 Z" />
+
+    <!-- AI Acoustic Wave Arcs (Left and Right) -->
+    <path
+        android:strokeColor="#81C784"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:pathData="M32,48 C28,54 28,64 32,70" />
+    <path
+        android:strokeColor="#81C784"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:pathData="M88,48 C92,54 92,64 88,70" />
+
+    <!-- Center Tree Canopy 1 (Back/Left) -->
+    <path
+        android:fillColor="#2E7D32"
+        android:pathData="M48,70 L34,70 L48,46 L42,46 L53,30 L64,46 L58,46 Z" />
+
+    <!-- Center Tree Canopy 2 (Front/Main) -->
+    <path
+        android:fillColor="#4CAF50"
+        android:fillAlpha="0.95"
+        android:pathData="M60,82 L42,82 L60,50 L52,50 L60,34 L68,50 L60,50 Z" />
+    <path
+        android:fillColor="#81C784"
+        android:pathData="M60,82 L78,82 L60,50 L68,50 L60,34 L68,50 L60,50 Z" />
+
+    <!-- Tree Trunk -->
+    <path
+        android:fillColor="#A5D6A7"
+        android:pathData="M57,82 H63 V90 H57 Z" />
+
+    <!-- Base Ground Arc -->
+    <path
+        android:strokeColor="#A5D6A7"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:pathData="M36,92 Q60,98 84,92" />
+</vector>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Theme Colors: Deep Forest Green -->
+    <color name="forest_green_primary">#1B4D3E</color>
+    <color name="forest_green_primary_dark">#0F382C</color>
+    <color name="forest_green_primary_container">#D1E8DF</color>
+    <color name="forest_green_on_primary_container">#052018</color>
+
+    <!-- Secondary Theme Colors: Nature Green -->
+    <color name="nature_green_secondary">#2E7D32</color>
+    <color name="nature_green_secondary_container">#DCEDC8</color>
+    <color name="nature_green_on_secondary_container">#0A250B</color>
+
+    <!-- Background and Surface Colors -->
+    <color name="background_off_white">#F8F9FA</color>
+    <color name="surface_white">#FFFFFF</color>
+    <color name="surface_variant">#F0F4F1</color>
+
+    <!-- Text and Content Colors: Dark Charcoal -->
+    <color name="text_dark_charcoal">#1C211E</color>
+    <color name="text_secondary">#5A645E</color>
+    <color name="text_on_primary">#FFFFFF</color>
+    <color name="divider_color">#E0E4E1</color>
+
+    <!-- Status & Alert Colors -->
+    <color name="accent_alert_red">#D32F2F</color>
+    <color name="accent_alert_red_container">#FFEBEE</color>
+    <color name="accent_warning_amber">#F57C00</color>
+    <color name="accent_warning_amber_container">#FFF3E0</color>
+    <color name="accent_status_green">#388E3C</color>
+    <color name="accent_status_green_container">#E8F5E9</color>
+</resources>
